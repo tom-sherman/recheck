@@ -1,9 +1,5 @@
 type t<'a> = {generate: Random.state => ('a, Random.state)}
 
-let int = (~min=-Js.Int.min, ~max=Js.Int.max, ()) => {
-  generate: rng => rng->Random.uniformIntDistribution(min, max),
-}
-
 let map = (arb, mapper) => {
   generate: rng => {
     let (value, next) = arb.generate(rng)
@@ -16,6 +12,10 @@ let mapWithRandom = (arb, mapper) => {
     let (value, next) = arb.generate(rng)
     mapper(value, next)
   },
+}
+
+let int = (~min=-Js.Int.min, ~max=Js.Int.max, ()) => {
+  generate: rng => rng->Random.uniformIntDistribution(min, max),
 }
 
 let bool = () => int(~min=0, ~max=1, ())->map(n => n == 0)
