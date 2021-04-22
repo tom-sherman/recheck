@@ -64,6 +64,14 @@ let character = () => nat(~max=25, ())->map(n => Js.String.fromCharCode(97 + n))
 
 let string = () => array(character())->map(characters => characters->Js.Array2.joinWith(""))
 
+let option = a =>
+  tuple2(a, bool())->map(((a, b)) =>
+    switch b {
+    | true => Some(a)
+    | false => None
+    }
+  )
+
 let rec generateN = (arb, n, rng) =>
   if n == 0 {
     []
