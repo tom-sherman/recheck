@@ -18,7 +18,9 @@ let int = (~min=-Js.Int.min, ~max=Js.Int.max, ()) => {
   generate: rng => rng->Random.uniformIntDistribution(min, max),
 }
 
-let bool = () => int(~min=0, ~max=1, ())->map(n => n == 0)
+let nat = (~max=Js.Int.max, ()) => int(~min=0, ~max, ())
+
+let bool = () => nat(~max=1, ())->map(n => n == 0)
 
 let tuple2 = (a, b) => {
   generate: rng => {
@@ -52,13 +54,13 @@ let array = arb => {
 
   {
     generate: rng => {
-      let (size, next) = int(~min=0, ~max=10, ()).generate(rng)
+      let (size, next) = nat(~max=10, ()).generate(rng)
       generate(size, arb, next)
     },
   }
 }
 
-let character = () => int(~min=0, ~max=25, ())->map(n => Js.String.fromCharCode(97 + n))
+let character = () => nat(~max=25, ())->map(n => Js.String.fromCharCode(97 + n))
 
 let string = () => array(character())->map(characters => characters->Js.Array2.joinWith(""))
 
